@@ -10,10 +10,10 @@ import time
 
 # environment & conventional methods
 import wireless_cache_network as cache
-from heuristic import *
+from conventional_method import *
 
 # DNN model
-import Q_model
+import DNN_model
 # CUDA GPU set
 use_cuda = torch.cuda.is_available()
 device = torch.device('cuda:0' if use_cuda else "cpu")
@@ -67,17 +67,17 @@ def Train(Q, Q_target, memory, optimizer): # training function motive by seungeu
 
 def main():
     # DQN_FCN model
-    # main_DQN = Q_model.Qnet_FCN(input_size, node, output_size).to(device) #FCN DQN
-    # target_DQN = Q_model.Qnet_FCN(input_size, node, output_size).to(device) #FCN DQN
+    # main_DQN = DNN_model.Qnet_FCN(input_size, node, output_size).to(device) #FCN DQN
+    # target_DQN = DNN_model.Qnet_FCN(input_size, node, output_size).to(device) #FCN DQN
 
     # Proposed model
-    main_DQN = Q_model.Qnet_v6(env.Num_packet, env.Num_file, env.F_packet, node, output_size).to(device)
-    target_DQN = Q_model.Qnet_v6(env.Num_packet, env.Num_file, env.F_packet, node, output_size).to(device)
+    main_DQN = DNN_model.Qnet_v6(env.Num_packet, env.Num_file, env.F_packet, node, output_size).to(device)
+    target_DQN = DNN_model.Qnet_v6(env.Num_packet, env.Num_file, env.F_packet, node, output_size).to(device)
 
     target_DQN.load_state_dict(main_DQN.state_dict())
     target_DQN.eval()
 
-    memory = Q_model.ReplayBuffer()
+    memory = DNN_model.ReplayBuffer()
     env.Zip_funtion()
     # learning set & 1 episode
     interval = 10
@@ -113,7 +113,7 @@ def main():
             # Proposed scheme
             s = torch.from_numpy(state).float().unsqueeze(0)
             with torch.no_grad():
-                aa = Q_model.Predict_Qnet_v6(main_DQN.eval().cpu(), s).detach().numpy()
+                aa = DNN_model.Predict_Qnet_v6(main_DQN.eval().cpu(), s).detach().numpy()
                 sigma = max(10.0 / ((episode / 200) + 1), 0.316)  # sigma^2 = 0.1
                 Noise = np.random.normal(0, sigma, size=4 * env.F_packet) / 10
                 action = env.action_select(aa, Noise)
