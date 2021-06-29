@@ -6,10 +6,9 @@ This is the code to show the results of the paper "Learning-Based Joint User Ass
 
 User association and content caching in small cell networks (SCNs) are widely studied to accommodate tremendous media traffic and alleviate the bottleneck of backhaul links. SCNs are appropriate for serving users with reducing transmission latency by properly caching the contents based on request distribution. We tackle the problem with a deep reinforcement learning (DRL) that considers the content transmission process and caching of small cells to facilitatees learning.
 
-### 목표 Objective
+### System model
 
 ![그림2](https://user-images.githubusercontent.com/44052428/121885036-a25bcb00-cd4e-11eb-8672-d493a7ff1022.png)
 
 
-#### 1. 
-
+## Training Code 
