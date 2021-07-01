@@ -2,9 +2,9 @@
 
 This is the code to show the results of the paper "Learning-Based Joint User Association and Cache Replacement in Small Cell Networks" by Sang eun jeon and Jae wook jung.
 
-이 연구에서는 다수의 기지국이 밀집해 위치한 소형셀 네트워크 환경에서 이용자의 위치와 요청 콘텐츠, 각 기지국의 콘텐츠 저장상태 등의 정보를 바탕으로 통신오류로 인한 지연을 최소화 할 수 있는 이용자 접속 및 캐시 교체 문제를 고려한다.
-
 User association and content caching in small cell networks (SCNs) are widely studied to accommodate tremendous media traffic and alleviate the bottleneck of backhaul links. SCNs are appropriate for serving users with reducing transmission latency by properly caching the contents based on request distribution. We tackle the problem with a deep reinforcement learning (DRL) that considers the content transmission process and caching of small cells to facilitatees learning.
+
+The application uses Pytorch backend on PyCharm: JetBrains. Our paper covers several algorithms that make user association and content replacement decisions in SBS to minimize latency in wireless communication in a cacheable small cell network. I assumed a cacheable small cell network realistically. The network environment assumes a small Rayleigh fading model, and various environments can be simulated by adjusting the environment parameters. The end goal for this is to implement a reinforcement learning-based trained algorithm using a deep neural network.
 
 ### System model
 
