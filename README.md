@@ -19,7 +19,11 @@ This is the code that designed the neural network structure. As shown in the pap
 
 
 ## Performance test
+This can confirm the performance results for the latency according to user association and cache replacement of the Deep reinforcement learning-based algorithm. We derived learning results according to three environmental variables.
 
+* Coverage (x_max, y_max)
+* Content Popularity (Zipf's exponent)
+* Memory (cache capacity)
 
 
 ## Non-stationary learning 
