@@ -19,7 +19,7 @@ This is the code that designed the neural network structure. As shown in the pap
 
 
 ## Performance test
-This can confirm the performance results for the latency according to user association and cache replacement of the Deep reinforcement learning-based algorithm. The folder is composed of code for testing, and the training results of each DNN model are saved every 5000 episodes. We derived learning results according to three environmental variables.
+This can confirm the performance results for the latency according to user association and cache replacement of the Deep reinforcement learning-based algorithm. The folder is composed of code for testing, and the training results of each DNN model are saved every 5000 episodes. This code can derive learning results according to three environment variables.
 
 * Coverage (x_max, y_max)
 ```c
