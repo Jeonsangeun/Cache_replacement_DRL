@@ -23,11 +23,13 @@ This can confirm the performance results for the latency according to user assoc
 
 * Coverage (x_max, y_max)
 ```c
-//```뒤에 자신이 원하는 언어 (생략 가능)
-#include <stdio.h>
-int main(void) {
-  printf("Hello World!");
-}
+def __init__(self):
+        self.Num_file = 20 #파일 수
+        self.Num_packet = 4 #파일당 패킷 수
+        self.Memory = 16 #메모리 크기
+        self.Small_cell = 4
+        self.x_max = 280 #이용자 최대 위치(횡축)
+        self.y_max = 280 #이용자 최대 위치(종축)
 ```
 * Content Popularity (Zipf's exponent)
 * Memory (cache capacity)
