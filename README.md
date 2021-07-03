@@ -19,21 +19,25 @@ This is the code that designed the neural network structure. As shown in the pap
 
 
 ## Performance test
-This can confirm the performance results for the latency according to user association and cache replacement of the Deep reinforcement learning-based algorithm. We derived learning results according to three environmental variables.
+This can confirm the performance results for the latency according to user association and cache replacement of the Deep reinforcement learning-based algorithm. The folder is composed of code for testing, and the training results of each DNN model are saved every 5000 episodes. We derived learning results according to three environmental variables.
 
 * Coverage (x_max, y_max)
 ```c
 def __init__(self):
-        self.Num_file = 20 #파일 수
-        self.Num_packet = 4 #파일당 패킷 수
-        self.Memory = 16 #메모리 크기
-        self.Small_cell = 4
-        self.x_max = 280 #이용자 최대 위치(횡축)
-        self.y_max = 280 #이용자 최대 위치(종축)
+        self.x_max = 215
+        self.y_max = 215
 ```
 * Content Popularity (Zipf's exponent)
+```c
+def __init__(self):
+        self.alpha = 0.8
+```
 * Memory (cache capacity)
-
+```c
+def __init__(self):
+        self.Memory = 16
+```
+Modify the following code in wireless_cache_network.py. After changing, run main_testing.py.
 
 ## Non-stationary learning 
 
