@@ -7,7 +7,7 @@ User association and content caching in small cell networks (SCNs) are widely st
 The application uses Pytorch backend on PyCharm: JetBrains. Our paper covers several algorithms that make user association and content replacement decisions in SBS to minimize latency in wireless communication in a cacheable small cell network. I assumed a cacheable small cell network realistically. The network environment assumes a small Rayleigh fading model, and various environments can be simulated by adjusting the environment parameters. The end goal for this is to implement a reinforcement learning-based trained algorithm using a deep neural network (DNN).
 
 ### System model
-<p align="center"><img src="./figure/system_model.png" width="40%" height="40%"/></p>
+<p align="center"><img src="./figure/System_model.png" width="40%" height="40%"/></p>
 
 
 ## Main learning in Wireless cache network
