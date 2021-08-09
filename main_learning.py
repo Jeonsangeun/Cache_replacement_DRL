@@ -53,7 +53,7 @@ def Train(Q, Q_target, memory, optimizer): # training function motive by seungeu
         # Q_prime = Q_target(next_state)
         # Q_prime = Q_prime.gather(1, Q_argmax_value)
 
-        # # DQN
+        # DQN
         Q_out = Q(state)
         Q_value = Q_out.gather(1, action)
         Q_prime = Q_target(next_state).max(1)[0].unsqueeze(1)
@@ -131,7 +131,7 @@ def main():
             if reward <= -500:
                 reward = -500
 
-            memory.put((state, action, reward / 100, next_state, done_mask))
+            memory.put((state, action, reward / 20.0, next_state, done_mask))
             state = next_state
         #
         cost += env.cost
