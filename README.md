@@ -24,8 +24,8 @@ This can confirm the performance results for the latency according to user assoc
 * Coverage (x_max, y_max)
 ```c
 def __init__(self):
-        self.x_max = 215
-        self.y_max = 215
+        self.x_max = 250
+        self.y_max = 250
 ```
 * Content Popularity (Zipf's exponent)
 ```c
