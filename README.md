@@ -11,7 +11,7 @@ The application uses Pytorch backend on PyCharm: JetBrains. Our paper covers sev
 
 
 ## Main learning in Wireless cache network
-This creates a wireless network environment and creates content delivery scenarios. Using the experiences in the content delivery process, the DNN is trained through the Train function. To reduce the bias in learning, instead of proceeding with learning every episode, the experience of the episode is accumulated and repeated at a certain moment. For reference, the main_learning.py is for learning.
+This creates a wireless network environment and creates content delivery scenarios. Using the experiences in the content delivery process, the DNN is trained through the Train function. To reduce the bias in learning, instead of proceeding with learning every episode, the experience of the episode is accumulated and repeated at a certain moment. For reference, the main_learning.py is for learning. The following is a schematic diagram of the learning process as a block diagram.
 
 <p align="center"><img src="./figure/Block_diagram.png" width="50%" height="50%"/></p>
 
