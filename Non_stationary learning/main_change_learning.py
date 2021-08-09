@@ -63,7 +63,7 @@ def main():
     memory = Q_model.ReplayBuffer()
 
     env.Zip_funtion()
-    interval = 10
+    interval = 20
     request = 1000
     cost, hit_rate = 0.0, 0.0
     optimizer = optim.Adam(main_DQN.parameters(), lr=learning_rate)
@@ -71,13 +71,13 @@ def main():
 
     for episode in range(max_episode):
 
-        if episode % 5000 == 0 and episode != 0:
+        if episode % 500 == 0 and episode != 0:
             env.change_pop()
 
         state = env.reset()
         file = env.file_request[0]
         user = env.user_location
-        e = max((1. / ((episode // 500) + 1)), 0.1)
+
         for i in range(request * env.Num_packet):
 
             s = torch.from_numpy(state).float().unsqueeze(0)
@@ -98,7 +98,7 @@ def main():
             if reward <= -500:
                 reward = -500
 
-            memory.put((state, action, reward / 100, next_state, done_mask))
+            memory.put((state, action, reward / 20.0, next_state, done_mask))
             state = next_state
 
         cost += env.cost
