@@ -25,11 +25,19 @@ This can confirm the performance results for the latency according to user assoc
 def __init__(self):
         self.x_max = 250
         self.y_max = 250
+        self.BS_Location = np.array([[(-1 * self.x_max / 2.0), (self.y_max / 2.0)],
+                                    [(self.x_max / 2.0), (self.y_max / 2.0)],
+                                    [(-1 * self.x_max / 2.0), (-1 * self.y_max / 2.0)],
+                                    [(self.x_max / 2.0), (-1 * self.y_max / 2.0)]]) # SBS location
 ```
 * Content Popularity (Zipf's exponent)
 ```c
 def __init__(self):
         self.alpha = 0.8
+...
+def Zip_funtion(self): # generate zip distribution
+        m = np.sum(np.array(range(1, self.Num_file+1))**(-self.alpha))
+        self.Zip_law = (np.array(range(1, self.Num_file+1))**(-self.alpha)) / m
 ```
 * Memory (cache capacity)
 ```c
