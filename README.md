@@ -45,7 +45,7 @@ This is a learning and testing code in a non-stationary environment where the us
 pop = 5
 env = cache.cache_replacement(pop)
 ...
-if episode % 5000 == 0 and episode != 0:
+if episode % 500 == 0 and episode != 0:
     env.change_pop()
 ```
 Each variable can be modified in the following part of the main code.
