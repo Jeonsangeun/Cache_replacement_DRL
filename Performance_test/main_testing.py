@@ -64,12 +64,6 @@ def main():
             # No cache
             # action = NO(env.Memory, env.BS_Location, user, env.state, env.point, env.F_packet)
 
-            # DQN
-            # s = torch.from_numpy(state).float().unsqueeze(0)
-            # with torch.no_grad():
-            #     aa = Q_model.Predict_Qnet1(main_DQN.cpu(), s).detach().numpy()
-            #     action = env.action_select(aa, Noise)
-
             # CNN
             s = torch.from_numpy(state).float().unsqueeze(0)
             with torch.no_grad():
@@ -91,8 +85,7 @@ def main():
             # print("----------------------------------")
 
             state = next_state
-
-        state_5 = state_1 + state_2 + state_3 + state_4
+            
         cost += env.cost
 
         if episode % interval == (interval - 1):
@@ -101,40 +94,32 @@ def main():
             cost = 0.0
             print(env.MS_error)
 
-    # chunk distribution
+    state_1 = state_1 / di
+    state_2 = state_2 / di
+    state_3 = state_3 / di
+    state_4 = state_4 / di
+
+    two_bottom = np.add(state_1, state_2)
+    three_bottom = np.add(two_bottom, state_3)
+
+    state_all = np.array([state_1, state_2, state_3, state_4])
 
     x = range(env.F_packet)
     x_1 = range(0, env.F_packet+1, env.Num_packet)
     x_2 = ["{:0^d}".format(x) for x in np.arange(0, env.F_packet + 1, env.Num_packet)]
-    di = 40000
-    # plt.subplot(2, 3, 1)
-    # plt.plot(x, state_1 / di)
-    # plt.xticks(x, x_, rotation=-30)
-    # # plt.ylabel("Cache probability", fontsize=10)
-    # # plt.xlabel("Packet number", fontsize=10)
-    # plt.subplot(2, 3, 2)
-    # plt.plot(x, state_2 / di)
-    # plt.xticks(x, x_, rotation=-30)
-    # # plt.ylabel("Cache probability", fontsize=10)
-    # # plt.xlabel("Packet number", fontsize=10)
-    # plt.subplot(2, 3, 4)
-    # plt.plot(x, state_3 / di)
-    # plt.xticks(x, x_, rotation=-30)
-    # plt.ylabel("Cache probability", fontsize=13)
-    # plt.xlabel("Packet index", fontsize=13)
-    # plt.subplot(2, 3, 5)
-    # plt.plot(x, state_4 / di)
-    # plt.xticks(x, x_, rotation=-30)
-    # # plt.ylabel("Cache probability", fontsize=10)
-    # # plt.xlabel("Packet number", fontsize=10)
-    # # plt.plot(x, l_z, color='red')
+    p1 = plt.bar(x, state_1, color='b', hatch='/')
+    plt.xticks(x_1, x_2, rotation=-30)
+    p2 = plt.bar(x, state_2, color='r', hatch='\\', bottom=state_1)
+    plt.xticks(x_1, x_2, rotation=-30)
+    p3 = plt.bar(x, state_3, color='g', hatch='-', bottom=two_bottom)
+    plt.xticks(x_1, x_2, rotation=-30)
+    p4 = plt.bar(x, state_4, color='silver', hatch='o', bottom=three_bottom)
+    plt.xticks(x_1, x_2, rotation=-30)
+    plt.ylabel("Sum cache rate of 4 SBSs", fontsize=10)
+    plt.xlabel("index $\it{j}$ chunks", fontsize=11)
 
-    # plt.subplot(2, 3, 3)
-    plt.bar(x, state_5 / di)
-    plt.xticks(x_1, x_2, rotation=30)
-    plt.ylabel("Cache probability", fontsize=10)
-    plt.xlabel("Packet number", fontsize=10)
-
+    plt.legend((p4[0], p3[0], p2[0], p1[0]), ("Small-cell BS4", "Small-cell BS3", "Small-cell BS2",  "Small-cell BS1"))
+    plt.ylim(0, 4.0)
     plt.show()
 
     print("start_time", start_time)
