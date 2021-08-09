@@ -13,6 +13,8 @@ The application uses Pytorch backend on PyCharm: JetBrains. Our paper covers sev
 ## Main learning in Wireless cache network
 This creates a wireless network environment and creates content delivery scenarios. Using the experiences in the content delivery process, the DNN is trained through the Train function. To reduce the bias in learning, instead of proceeding with learning every episode, the experience of the episode is accumulated and repeated at a certain moment. For reference, the main_learning.py is for learning.
 
+<p align="center"><img src="./figure/Block_diagram.png" width="40%" height="40%"/></p>
+
 ## Designing DNN model 
 This is the code that designed the neural network structure. As shown in the paper, the DNN structure to be trained can be found in DNN_model.py. I went through a lot of trial and error to find the current effective DNN, and you can check the old DNN structure in the last_DNN_model folder.
 
