@@ -7,8 +7,8 @@ class cache_replacement:
         self.Num_packet = 4 #파일당 패킷 수
         self.Memory = 16 #메모리 크기
         self.Small_cell = 4
-        self.x_max = 280 #이용자 최대 위치(횡축)
-        self.y_max = 280 #이용자 최대 위치(종축)
+        self.x_max = 250 #이용자 최대 위치(횡축)
+        self.y_max = 250 #이용자 최대 위치(종축)
         self.F_packet = self.Num_file * self.Num_packet #총 패킷 수
         self.alpha = 0.8 #zip 알파
         self.BH_path = 3.6
@@ -24,15 +24,15 @@ class cache_replacement:
         self.Transmit_Rate = 1.0 #전송률
         self.M_S_error = 0.1 #Macro->Small 에러율
         self.M_S_distance = np.sqrt(np.sum((self.BS_Location[0] - [0, 0]) ** 2))
-        self.Macro_BS = 10 #Macro->Small cost
-        self.Small_BS = 5 #Small->Macro cost
+        self.Macro_BS = 5 #Macro->Small cost
+        self.Small_BS = 1 #Small->Macro cost
         self.cost, self.fail, self.count = 0, 0, 0 #1episode 당 cost #패킷 리퀘스트 카운트
         self.point = 1 #state 설정값
         self.Zip_law = [] #zip 분포
         self.Setting = tuple(range(0, self.F_packet, self.Num_packet)) #zip 분포 파일
         self.file_request = []
         self.error = 0
-        self.TTL_time = 1000
+        self.TTL_time = 100
         self.hit = 0
 
     def Zip_funtion(self): #zip 분포 생성
