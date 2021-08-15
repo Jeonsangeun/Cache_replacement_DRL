@@ -1,5 +1,4 @@
-# Overview Cache_replacement_DRL
-### 코드 설명 위주의 설명 진행 
+# Code in Cache_replacement_DRL
 This is the code to show the results of the paper "Learning-Based Joint User Association and Cache Replacement in Small Cell Networks" by Sang eun jeon, Jae wook jung and Jun pyo hong.
 
 The application uses Python backend on PyCharm: JetBrains. To run the code, you need the following Python library.
@@ -20,12 +19,11 @@ For training, the pytorch library was used Pytorch and used the version pytorch=
 ### System model
 <p align="center"><img src="./figure/System_model.png" width="40%" height="40%"/></p>
 
-## Main learning in Wireless cache network -> DQN algorithm
-### 논문에 제시한 알고리즘 부각 <논문에서 ~~ 부분이다> 
+## Deep reinforcement algorithm
 
-This creates a wireless network environment and creates content delivery scenarios. Using the experiences in the content delivery process, the DNN is trained through the Train function. To reduce the bias in learning, instead of proceeding with learning every episode, the experience of the episode is accumulated and repeated at a certain moment. For reference, the main_learning.py is for learning. The following figure is a schematic block diagram of the learning process.
-
+We adopted DQN as our learning algorithm, and the learning process is illustrated in the block diagram below.
 <p align="center"><img src="./figure/Block_diagram.png" width="50%" height="50%"/></p>
+You can check the algorithm in Training.py.
 
 ## Designing DNN model -> model 명칭
 This is the code that designed the neural network structure. As shown in the paper, the DNN structure to be trained can be found in DNN_model.py. I went through a lot of trial and error to find the current effective DNN, and you can check the old DNN structure in the last_DNN_model folder.
