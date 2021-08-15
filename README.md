@@ -13,7 +13,7 @@ import time
 import matplotlib.pyplot
 ```
 
-For training, the pytorch library was used Pytorch and used the version pytorch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0 cudatoolkit=10.2.
+For training, the library was used Pytorch and used the version pytorch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0 cudatoolkit=10.2. The project consists of Training.py, a learning and scenario progress code, Cache_Net_Environment.py, a network environment code, and a DNN_model.py, designed deep neural network (DNN) model. In addition, as described in the paper, test codes that can perform performance verification while changing various network environment variables were also prepared. I wanted to use an application that implements a wireless environment, but it was too complicated to configure a cache network, so I coded it myself and proceeded with the simulation.
 
 
 ### System model
