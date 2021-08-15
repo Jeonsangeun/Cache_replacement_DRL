@@ -2,7 +2,20 @@
 ### 코드 설명 위주의 설명 진행 
 This is the code to show the results of the paper "Learning-Based Joint User Association and Cache Replacement in Small Cell Networks" by Sang eun jeon, Jae wook jung and Jun pyo hong.
 
-The application uses Pytorch backend on PyCharm: JetBrains. Our paper covers several algorithms that make user association and content replacement decisions in SBS to minimize latency in wireless communication in a cacheable small cell network. I assumed a cacheable small cell network realistically. The network environment assumes a small Rayleigh fading model, and various environments can be simulated by adjusting the environment parameters. The end goal for this is to implement a reinforcement learning-based trained algorithm using a deep neural network (DNN).
+The application uses Python backend on PyCharm: JetBrains. To run the code, you need the following Python library.
+```c
+# essential library
+import collections
+import torch
+import numpy
+# optional library
+import random
+import time
+import matplotlib.pyplot
+```
+
+For training, the pytorch library was used Pytorch and used the version pytorch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0 cudatoolkit=10.2.
+
 
 ### System model
 <p align="center"><img src="./figure/System_model.png" width="40%" height="40%"/></p>
