@@ -9,7 +9,7 @@ import numpy as np
 import time
 
 # environment & conventional methods
-import wireless_cache_network as cache
+import Cache_Net_Environment as cache
 from conventional_method import *
 
 # DNN model
