@@ -2,15 +2,15 @@ import numpy as np
 
 class cache_replacement:
 
-    def __init__(self):
+    def __init__(self, coverage, Zipf_ex, Mem):
         self.Num_file = 20 #파일 수
         self.Num_packet = 4 #파일당 패킷 수
-        self.Memory = 16 #메모리 크기
+        self.Memory = Mem #메모리 크기
         self.Small_cell = 4
-        self.x_max = 250 #이용자 최대 위치(횡축)
-        self.y_max = 250 #이용자 최대 위치(종축)
+        self.x_max = coverage #이용자 최대 위치(횡축)
+        self.y_max = coverage #이용자 최대 위치(종축)
         self.F_packet = self.Num_file * self.Num_packet #총 패킷 수
-        self.alpha = 0.8 #zip 알파
+        self.alpha = Zipf_ex #zip 알파
         self.BH_path = 3.6
         self.AC_path = 3.6
         self.Transmission_Power = 10**9 #송신전력
