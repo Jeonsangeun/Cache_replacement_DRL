@@ -1,51 +1,66 @@
+-----Basic library-----
 import random as rd
+import numpy as np
 import collections
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+mpl.rc('xtick', labelsize=10)
+mpl.rc('ytick', labelsize=10)
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
+-----local library-----
 import wireless_cache_network as cache
-import numpy as np
 from conventional_method import *
 import DNN_model
-import time
-import matplotlib.pyplot as plt
-from celluloid import Camera
 
-import matplotlib as mpl
-mpl.rc('xtick', labelsize=10)
-mpl.rc('ytick', labelsize=10)
-
+-----main setting-----
 max_episode = 10
-env = cache.cache_replacement()
-node = 400
-w_node = 1
-input_size = 5 * env.F_packet + 4
-output_size = 4 * env.F_packet
+coverage = 200 # Network coverage, range : [150, 300]
+Zipf_ex = 0.8 # popularity exponential, range : [0.3, 2.0]
+Mem = 16 # cache memory capacity range : [4, 24]
+env = cache.cache_replacement(coverage, Zipf_ex, Mem)
 y_layer = []
 
-def main():
+-----training parameter-----
+node = 400
+input_size = 5 * env.F_packet + 4
+output_size = 4 * env.F_packet
 
-    # main_DQN = DNN_model.Qnet_FCN(input_size, node, output_size) #FCN
-    main_DQN = DNN_model.Qnet_v6(env.Num_packet, env.Num_file, env.F_packet, node, output_size) #CNN
-    main_DQN.load_state_dict(torch.load(".pth", map_location='cpu'))
+-----load network parameters-----
+type_DNN = 0 # 0 : FCN DQN, 1 : Propose DQN
+Model_path = "CNN_c200_40000.pth" # file name
+
+-----select algorithm-----
+algorithm = 0 # 0 : DUA-LFU, 1 : CUA-LFU, 2 : DQN-FCN & Proposed scheme
+
+def main():
+    
+    if type_DNN == 0:
+        main_DQN = DNN_model.Qnet_FCN(input_size, node, output_size) #FCN
+    elif type_DNN == 1:
+        main_DQN = DNN_model.Qnet_v6(env.Num_packet, env.Num_file, env.F_packet, node, output_size) #CNN
+
+    main_DQN.load_state_dict(torch.load(Model_path, map_location='cpu'))
     main_DQN.eval()
 
-    # view parameter
+    # If you want to view the parameter please remove below comments
     # print("main_DQN:", main_DQN)
     # print("main_DQN1 value:", list(main_DQN.Lc.parameters())
 
+    # To make cache probability
     state_1 = np.zeros([env.F_packet])
     state_2 = np.zeros([env.F_packet])
     state_3 = np.zeros([env.F_packet])
     state_4 = np.zeros([env.F_packet])
-
-    env.Zip_funtion()
-    interval = 1
-    request = 1000
-    cost = 0.0
-    start_time = time.time()
-
+    
+    env.Zip_funtion() # init popularity
+    request = 1000 # the number of requests
+    
+    interval = 1 # output check cycle
+    cost = 0.0 # init cost
+    
     for episode in range(max_episode):
         state = env.reset()
         file = env.file_request[0]
@@ -56,24 +71,21 @@ def main():
             state_2 += env.state[1]
             state_3 += env.state[2]
             state_4 += env.state[3]
-
-            # CD
-            # action = CD(env.Memory, env.BS_Location, user, env.state, env.point, file, env.F_packet)
-            # SD
-            # action = SD(env.Memory, env.BS_Location, user, env.state, env.point, env.F_packet)
-            # No cache
-            # action = NO(env.Memory, env.BS_Location, user, env.state, env.point, env.F_packet)
-
-            # CNN
-            s = torch.from_numpy(state).float().unsqueeze(0)
-            with torch.no_grad():
-                aa = main_DQN(s).cpu().detach().numpy()
-                Noise = np.zeros(4 * env.F_packet)
-                action = env.action_select(aa, Noise)
+            
+            if algorithm == 0:
+                action = CD(env.Memory, env.BS_Location, user, env.state, env.point, file, env.F_packet) # CUA-LFU
+            elif algorithm == 1:
+                action = SD(env.Memory, env.BS_Location, user, env.state, env.point, env.F_packet) # DUA-LFU
+            elif algorithm == 2: # using main_DQN
+                s = torch.from_numpy(state).float().unsqueeze(0)
+                with torch.no_grad():
+                    aa = main_DQN(s).cpu().detach().numpy()
+                    Noise = np.zeros(4 * env.F_packet)
+                    action = env.action_select(aa, Noise)
 
             next_state, reward, done, file, user = env.step(action, file, user)
 
-            # If you want to see the environment status by time step, remove the comment.
+            # If you want to see the environment status by time step, remove below comments
             # print("----------------------------------")
             # print("file", file)
             # print("user", user)
@@ -92,8 +104,8 @@ def main():
             y_layer.append(cost / interval)
             print("Episode: {} cost: {}".format(episode, (cost / interval)))
             cost = 0.0
-            print(env.MS_error)
-
+            
+    di = 10*request * env.Num_packet
     state_1 = state_1 / di
     state_2 = state_2 / di
     state_3 = state_3 / di
@@ -121,9 +133,6 @@ def main():
     plt.legend((p4[0], p3[0], p2[0], p1[0]), ("Small-cell BS4", "Small-cell BS3", "Small-cell BS2",  "Small-cell BS1"))
     plt.ylim(0, 4.0)
     plt.show()
-
-    print("start_time", start_time)
-    print("--- %s seconds ---" % (time.time() - start_time))
 
 if __name__ == '__main__':
     main()
