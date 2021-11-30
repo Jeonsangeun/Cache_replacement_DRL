@@ -33,8 +33,8 @@ w_node = 1
 input_size = 5 * env.F_packet + 4
 output_size = 4 * env.F_packet
 # data_list set
-y_layer = []
-z_layer = []
+latency_layer = [] # latency stack
+cache_layer = [] # cache hit rate stack
 
 def Train(Q, Q_target, memory, optimizer): # training function motive by seungeunrho
     for i in range(30):
@@ -95,21 +95,6 @@ def main():
         user = env.user_location
         for i in range(request * env.Num_packet):
 
-            #CD
-            # action = CD(env.Memory, env.BS_Location, user, env.state, env.point, file, env.F_packet)
-
-            #SD
-            # action = SD(env.Memory, env.BS_Location, user, env.state, env.point, env.F_packet):
-
-            # RR
-            # action = env.random_action()
-
-            # DQN
-            # s = torch.from_numpy(state).float().unsqueeze(0)
-            # with torch.no_grad():
-            #     aa = Q_model.Predict_Qnet1(main_DQN.cpu(), s).detach().numpy()
-            #     action = env.action_select(aa, Noise)
-
             # Proposed scheme
             s = torch.from_numpy(state).float().unsqueeze(0)
             with torch.no_grad():
@@ -139,8 +124,8 @@ def main():
 
         if episode % interval == (interval - 1): # Training
             main_DQN.to(device) # GPU learning
-            y_layer.append(cost / interval)
-            z_layer.append(hit_rate / interval)
+            latency_layer.append(cost / interval)
+            cache_layer.append(hit_rate / interval)
             print("Episode: {} cost: {} hit_rate: {}".format(episode, (cost / interval), (hit_rate / interval)))
 
             Train(main_DQN, target_DQN, memory, optimizer)
@@ -148,12 +133,12 @@ def main():
             target_DQN.eval()
             cost, hit_rate = 0.0, 0.0
 
-        if episode % 2500 == 0 and episode != 0: # Saving learned NNs every 2500
+        if episode % 2500 == 0 and episode != 0: # Saving learned NNs every 2500 (check-point)
             pro += 1
             savePath = "test_model_conv0" + str(pro) + ".pth"
             torch.save(main_DQN.state_dict(), savePath)
-            np.save("acc_delay", y_layer)
-            np.save("cache_hit", z_layer)
+            np.save("acc_delay", latency_layer)
+            np.save("cache_hit", cache_layer)
 
     # finished NN
     savePath = "final_model.pth"
@@ -161,8 +146,8 @@ def main():
 
     print("start_time", start_time)
     print("--- %s seconds ---" % (time.time() - start_time))
-    np.save("final_acc_delay", y_layer)
-    np.save("final_cache_hit", z_layer)
+    np.save("final_acc_delay", latency_layer)
+    np.save("final_cache_hit", cache_layer)
 
 if __name__ == '__main__':
     main()
