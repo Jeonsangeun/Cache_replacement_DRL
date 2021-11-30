@@ -11,7 +11,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 -----local library-----
-import wireless_cache_network as cache
+import wireless_cache_environment as cache
 from conventional_method import *
 import DNN_model
 
