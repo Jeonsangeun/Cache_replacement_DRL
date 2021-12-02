@@ -1,15 +1,9 @@
 -----Basic library-----
-import random as rd
 import numpy as np
-import collections
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 mpl.rc('xtick', labelsize=10)
 mpl.rc('ytick', labelsize=10)
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
 -----local library-----
 import wireless_cache_environment as cache
 from conventional_method import *
@@ -21,6 +15,7 @@ coverage = 200 # Network coverage, range : [150, 300]
 Zipf_ex = 0.8 # popularity exponential, range : [0.3, 2.0]
 Mem = 16 # cache memory capacity range : [4, 24]
 env = cache.cache_replacement(coverage, Zipf_ex, Mem)
+conventional = LFU()
 y_layer = []
 
 -----training parameter-----
@@ -60,11 +55,15 @@ def main():
     
     interval = 1 # output check cycle
     cost = 0.0 # init cost
+    conventional.init_change() # start LFU
     
     for episode in range(max_episode):
+        ----initialization-----
         state = env.reset()
         file = env.file_request[0]
         user = env.user_location
+        conventional.init_episode()
+        
         for i in range(request * env.Num_packet):
             # cache_state
             state_1 += env.state[0]
@@ -73,9 +72,9 @@ def main():
             state_4 += env.state[3]
             
             if algorithm == 0:
-                action = CD(env.Memory, env.BS_Location, user, env.state, env.point, file, env.F_packet) # CUA-LFU
+                action = conventional.CD_pop(env.Memory, env.BS_Location, user, env.state, env.point, file, env.F_packet) # CUA-LFU
             elif algorithm == 1:
-                action = SD(env.Memory, env.BS_Location, user, env.state, env.point, env.F_packet) # DUA-LFU
+                action = action = conventional.SD_pop(env.Memory, env.BS_Location, user, env.state, env.point, file, env.F_packet) # DUA-LFU
             elif algorithm == 2: # using main_DQN
                 s = torch.from_numpy(state).float().unsqueeze(0)
                 with torch.no_grad():
@@ -99,7 +98,8 @@ def main():
             state = next_state
             
         cost += env.cost
-
+        conventional.buffer_his(episode)
+        
         if episode % interval == (interval - 1):
             y_layer.append(cost / interval)
             print("Episode: {} cost: {}".format(episode, (cost / interval)))
