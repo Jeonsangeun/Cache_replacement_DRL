@@ -54,7 +54,7 @@ class cache_replacement:
 
         self.user_location = np.random.uniform(-1*self.x_max, self.x_max, (1, 2))[0]
         self.cost, self.fail, self.count, self.hit = 0, 0, 0, 0
-        self.file_request = np.random.choice(self.Setting, 10001, p=self.Zip_law)
+        self.file_request = np.random.choice(self.Setting, 1001, p=self.Zip_law)
         state = self.flat(self.user_location, self.file_request[0]) #, np.array([0, 0])
         return state
 
