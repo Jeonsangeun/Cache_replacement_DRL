@@ -165,5 +165,3 @@ class cache_replacement:
         state = np.array([np.where(self.state[0] == self.point)[0], np.where(self.state[1] == self.point)[0],
                           np.where(self.state[2] == self.point)[0], np.where(self.state[3] == self.point)[0]])
         return state
-
-
