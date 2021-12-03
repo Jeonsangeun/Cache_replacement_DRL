@@ -1,33 +1,33 @@
------Basic library-----
+# -----Basic library-----
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 mpl.rc('xtick', labelsize=10)
 mpl.rc('ytick', labelsize=10)
------local library-----
+# -----local library-----
 import wireless_cache_environment as cache
 from conventional_method import *
 import DNN_model
 
------main setting-----
+# -----main setting-----
 max_episode = 10
 coverage = 200 # Network coverage, range : [150, 300]
 Zipf_ex = 0.8 # popularity exponential, range : [0.3, 2.0]
 Mem = 16 # cache memory capacity range : [4, 24]
 env = cache.cache_replacement(coverage, Zipf_ex, Mem)
 conventional = LFU()
-y_layer = []
+latency_layer = [] # latency stack
 
------training parameter-----
+# -----training parameter-----
 node = 400
 input_size = 5 * env.F_packet + 4
 output_size = 4 * env.F_packet
 
------load network parameters-----
+# -----load network parameters-----
 type_DNN = 0 # 0 : FCN DQN, 1 : Propose DQN
 Model_path = "CNN_c200_40000.pth" # file name
 
------select algorithm-----
+# -----select algorithm-----
 algorithm = 0 # 0 : DUA-LFU, 1 : CUA-LFU, 2 : DQN-FCN & Proposed scheme
 
 def main():
@@ -58,7 +58,7 @@ def main():
     conventional.init_change() # start LFU
     
     for episode in range(max_episode):
-        ----initialization-----
+        # ----initialization-----
         state = env.reset()
         file = env.file_request[0]
         user = env.user_location
@@ -101,7 +101,7 @@ def main():
         conventional.buffer_his(episode)
         
         if episode % interval == (interval - 1):
-            y_layer.append(cost / interval)
+            latency_layer.append(cost / interval)
             print("Episode: {} cost: {}".format(episode, (cost / interval)))
             cost = 0.0
             
