@@ -18,23 +18,30 @@ import DNN_model
 use_cuda = torch.cuda.is_available()
 device = torch.device('cuda:0' if use_cuda else "cpu")
 
-start_time = time.time()
+# -----main setting-----
+max_episode = 10
+coverage = 200 # Network coverage, range : [150, 300]
+Zipf_ex = 0.8 # popularity exponential, range : [0.3, 2.0]
+Mem = 16 # cache memory capacity range : [4, 24]
+env = cache.cache_replacement(coverage, Zipf_ex, Mem)
+conventional = LFU()
+latency_layer = [] # latency stack
+cache_layer = [] # cache hit rate stack
+
+# -----training parameter-----
+node = 400
+input_size = 5 * env.F_packet + 4
+output_size = 4 * env.F_packet
+
+# -----load network parameters-----
+type_DNN = 0 # 0 : FCN DQN, 1 : Propose DQN
+Model_path = "CNN_c200_40000.pth" # file name
 
 # hyperparameter for learning
 learning_rate = 0.001
 gamma = 0.99
 batch_size = 4096
 max_episode = 10000
-
-# environment import & DNN parameter setting
-env = cache.cache_replacement()
-node = 400
-w_node = 1
-input_size = 5 * env.F_packet + 4
-output_size = 4 * env.F_packet
-# data_list set
-latency_layer = [] # latency stack
-cache_layer = [] # cache hit rate stack
 
 def Train(Q, Q_target, memory, optimizer): # training function motive by seungeunrho
     for i in range(30):
