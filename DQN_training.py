@@ -37,11 +37,18 @@ output_size = 4 * env.F_packet
 type_DNN = 0 # 0 : FCN DQN, 1 : Propose DQN
 Model_path = "CNN_c200_40000.pth" # file name
 
-# hyperparameter for learning
+# -----hyperparameter for learning-----
 learning_rate = 0.001
 gamma = 0.99
 batch_size = 4096
 max_episode = 10000
+
+# -----load network parameters-----
+type_DNN = 0 # 0 : FCN DQN, 1 : Propose DQN
+Model_path = "CNN_c200_40000.pth" # file name
+
+# -----select algorithm-----
+algorithm = 0 # 0 : DUA-LFU, 1 : CUA-LFU, 2 : DQN-FCN & Proposed scheme
 
 def Train(Q, Q_target, memory, optimizer): # training function motive by seungeunrho
     for i in range(30):
