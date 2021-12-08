@@ -85,7 +85,7 @@ def main():
     env.Zip_funtion() # init popularity
     request = 1000 # the number of requests
     interval = 10 # output check cycle
-    cost, hit_rate, tr_epoch = 0.0, 0.0 # init cost
+    cost, hit_rate, tr_epoch = 0.0, 0.0, 0 # init cost
     
     # optimize tool
     optimizer = optim.Adam(main_DQN.parameters(), lr=learning_rate)
