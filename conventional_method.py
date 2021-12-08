@@ -234,7 +234,3 @@ class pop_change:
         action = F_packet * shortest + aa
 
         return int(action)
-
-
-
-
