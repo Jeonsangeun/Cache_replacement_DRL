@@ -33,10 +33,6 @@ node = 400
 input_size = 5 * env.F_packet + 4
 output_size = 4 * env.F_packet
 
-# -----load network parameters-----
-type_DNN = 0 # 0 : FCN DQN, 1 : Propose DQN
-Model_path = "CNN_c200_40000.pth" # file name
-
 # -----hyperparameter for learning-----
 learning_rate = 0.001
 gamma = 0.99
