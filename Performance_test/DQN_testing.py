@@ -1,5 +1,6 @@
 # -----Basic library-----
 import numpy as np
+import torch
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 mpl.rc('xtick', labelsize=10)
@@ -18,7 +19,7 @@ env = cache.cache_replacement(coverage, Zipf_ex, Mem)
 conventional = LFU()
 latency_layer = [] # latency stack
 
-# -----training parameter-----
+# -----hyper_parameter-----
 node = 400
 input_size = 5 * env.F_packet + 4
 output_size = 4 * env.F_packet
@@ -74,7 +75,7 @@ def main():
             if algorithm == 0:
                 action = conventional.CUA_LFU(env.Memory, env.BS_Location, user, env.state, env.point, file, env.F_packet) # CUA-LFU
             elif algorithm == 1:
-                action = action = conventional.DUA_LFU(env.Memory, env.BS_Location, user, env.state, env.point, file, env.F_packet) # DUA-LFU
+                action = conventional.DUA_LFU(env.Memory, env.BS_Location, user, env.state, env.point, file, env.F_packet) # DUA-LFU
             elif algorithm == 2: # using main_DQN
                 s = torch.from_numpy(state).float().unsqueeze(0)
                 with torch.no_grad():
