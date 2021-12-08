@@ -105,12 +105,6 @@ def main():
                 Noise = np.random.normal(0, sigma, size=4 * env.F_packet) / 10
                 action = env.action_select(aa, Noise)
 
-            # Validation_Q-value
-            if episode % 100 == 99:
-                if i == 0:
-                    print(np.max(aa))
-                    print(np.min(aa))
-
             next_state, reward, done, file, user = env.step(action, file, user)
             done_mask = 0.0 if done else 1.0
 
@@ -120,7 +114,12 @@ def main():
 
             memory.put((state, action, reward / 20.0, next_state, done_mask))
             state = next_state
-        #
+
+        # Validation_Q-value
+        if episode % 100 == 99:
+            print(np.max(aa))
+            print(np.min(aa))
+        # Accumulate
         cost += env.cost
         hit_rate += env.hit
 
@@ -136,7 +135,7 @@ def main():
             cost, hit_rate = 0.0, 0.0
 
         if episode % 2500 == 0 and episode != 0: # Saving learned NNs every 2500 (check-point)
-            pro += 1
+            tr_epoch += 1
             savePath = "test_model_conv" + str(tr_epoch) + ".pth"
             torch.save(main_DQN.state_dict(), savePath)
             np.save("acc_delay", latency_layer)
@@ -146,8 +145,6 @@ def main():
     savePath = "final_model.pth"
     torch.save(main_DQN.state_dict(), savePath)
 
-    print("start_time", start_time)
-    print("--- %s seconds ---" % (time.time() - start_time))
     np.save("final_acc_delay", latency_layer)
     np.save("final_cache_hit", cache_layer)
 
