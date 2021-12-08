@@ -1,24 +1,22 @@
 import numpy as np
-import collections
 
 buffer_m = np.zeros([1, 80])
 
 def Distance(x, y):  # 좌표간의 거리
     return np.sqrt(np.sum((x - y) ** 2))
 
-def NO(Memory, BS_Location, user, state, point, F_packet):
+def NO(BS_Location, user, F_packet):
     action = -1
-    aa = np.zeros([4, Memory])
-    cc = np.zeros([4])
+    distance = np.zeros([4])
     dis2 = 1000
-    cc[0] = Distance(BS_Location[0], user)
-    cc[1] = Distance(BS_Location[1], user)
-    cc[2] = Distance(BS_Location[2], user)
-    cc[3] = Distance(BS_Location[3], user)
+    distance[0] = Distance(BS_Location[0], user)
+    distance[1] = Distance(BS_Location[1], user)
+    distance[2] = Distance(BS_Location[2], user)
+    distance[3] = Distance(BS_Location[3], user)
 
     for i in range(4):
-        if dis2 > cc[i]:
-            dis2 = cc[i]
+        if dis2 > distance[i]:
+            dis2 = distance[i]
             action = F_packet * i
 
     return int(action)
@@ -28,7 +26,7 @@ def one_hot_encode(file):
     temp[file] = 1
     return temp
 
-def Zip_funtion():  # zip 분포 생성
+def Zip_funtion():  # zip distribution
     m = np.sum(np.array(range(1, 20 + 1)) ** (-0.8))
     Zip_law = (np.array(range(1, 20 + 1)) ** (-0.8)) / m
     return Zip_law
@@ -53,72 +51,72 @@ class LFU:
 
     def buffer_his(self, episode):
 
-        if episode < 299:
-            aa = np.insert(self.buffer_m, 0, self.request_history, axis=0)
+        if episode <= 300: # save a certain amount ex) 300 history
+            temp_buffer = np.insert(self.buffer_m, 0, self.request_history, axis=0)
         else:
-            bb = np.delete(self.buffer_m, -1, axis=0)
-            aa = np.insert(bb, 0, self.request_history, axis=0)
+            delete_data = np.delete(self.buffer_m, -1, axis=0)
+            temp_buffer = np.insert(delete_data, 0, self.request_history, axis=0)
 
-        self.buffer_m = aa
+        self.buffer_m = temp_buffer
 
-    def CD_pop(self, Memory, BS_Location, user, state, point, file, F_packet):
+    def CUA_LFU(self, Memory, BS_Location, user, state, point, file, F_packet):
         self.request_history[file] += 1
 
         hist = self.buffer_m.sum(axis=0)
 
-        aa = np.zeros([4, Memory], dtype=np.int)
-        cc = np.zeros([4])
-        dd = np.zeros([4])
+        cache_state = np.zeros([4, Memory], dtype=np.int)
+        distance = np.zeros([4])
+        cache_hit = np.zeros([4])
 
-        cc[0] = Distance(BS_Location[0], user)
-        cc[1] = Distance(BS_Location[1], user)
-        cc[2] = Distance(BS_Location[2], user)
-        cc[3] = Distance(BS_Location[3], user)
+        distance[0] = Distance(BS_Location[0], user)
+        distance[1] = Distance(BS_Location[1], user)
+        distance[2] = Distance(BS_Location[2], user)
+        distance[3] = Distance(BS_Location[3], user)
 
-        aa[0] = np.where(state[0] == point)[0]
-        aa[1] = np.where(state[1] == point)[0]
-        aa[2] = np.where(state[2] == point)[0]
-        aa[3] = np.where(state[3] == point)[0]
+        cache_state[0] = np.where(state[0] == point)[0]
+        cache_state[1] = np.where(state[1] == point)[0]
+        cache_state[2] = np.where(state[2] == point)[0]
+        cache_state[3] = np.where(state[3] == point)[0]
 
         for i in range(4):
-            if file in aa[i]:
-                dd[i] = 1
+            if file in cache_state[i]:
+                cache_hit[i] = 1
             else:
-                dd[i] = 100
-        if 1 in dd:
-            ee = cc * dd
+                cache_hit[i] = 100
+        if 1 in cache_hit: # It works if you cache the request
+            ee = distance * cache_hit # weight the distance
             shortest = np.argmin(ee)
-            hist[aa[shortest]] -= 100000
-            aa = np.argwhere(hist == np.amin(hist)).flatten().tolist()[-1]
+            hist[cache_state[shortest]] -= 100000
+            aa = np.argwhere(hist == np.amin(hist)).flatten().tolist()[-1] # LFU action
             action = F_packet * shortest + aa
         else:
-            shortest = np.argmin(cc)
-            hist[aa[shortest]] -= 100000
+            shortest = np.argmin(distance)
+            hist[cache_state[shortest]] -= 100000
             aa = np.argwhere(hist == np.amin(hist)).flatten().tolist()[-1]
             action = F_packet * shortest + aa
 
         return int(action)
 
-    def SD_pop(self,Memory, BS_Location, user, state, point, file, F_packet):
+    def DUA_LFU(self,Memory, BS_Location, user, state, point, file, F_packet):
         self.request_history[file] += 1
 
         hist = self.buffer_m.sum(axis=0)
-        aa = np.zeros([4, Memory], dtype=np.int)
-        cc = np.zeros([4])
+        cache_state = np.zeros([4, Memory], dtype=np.int)
+        distance = np.zeros([4])
 
-        cc[0] = Distance(BS_Location[0], user)
-        cc[1] = Distance(BS_Location[1], user)
-        cc[2] = Distance(BS_Location[2], user)
-        cc[3] = Distance(BS_Location[3], user)
+        distance[0] = Distance(BS_Location[0], user)
+        distance[1] = Distance(BS_Location[1], user)
+        distance[2] = Distance(BS_Location[2], user)
+        distance[3] = Distance(BS_Location[3], user)
 
-        aa[0] = np.where(state[0] == point)[0]
-        aa[1] = np.where(state[1] == point)[0]
-        aa[2] = np.where(state[2] == point)[0]
-        aa[3] = np.where(state[3] == point)[0]
+        cache_state[0] = np.where(state[0] == point)[0]
+        cache_state[1] = np.where(state[1] == point)[0]
+        cache_state[2] = np.where(state[2] == point)[0]
+        cache_state[3] = np.where(state[3] == point)[0]
 
-        shortest = np.argmin(cc)
-        hist[aa[shortest]] -= 100000
-        aa = np.argwhere(hist == np.amin(hist)).flatten().tolist()[-1]
+        shortest = np.argmin(distance)
+        hist[cache_state[shortest]] -= 100000
+        aa = np.argwhere(hist == np.amin(hist)).flatten().tolist()[-1] # LFU action
         action = F_packet * shortest + aa
 
         return int(action)
