@@ -72,9 +72,9 @@ def main():
             state_4 += env.state[3]
             
             if algorithm == 0:
-                action = conventional.CD_pop(env.Memory, env.BS_Location, user, env.state, env.point, file, env.F_packet) # CUA-LFU
+                action = conventional.CUA_LFU(env.Memory, env.BS_Location, user, env.state, env.point, file, env.F_packet) # CUA-LFU
             elif algorithm == 1:
-                action = action = conventional.SD_pop(env.Memory, env.BS_Location, user, env.state, env.point, file, env.F_packet) # DUA-LFU
+                action = action = conventional.DUA_LFU(env.Memory, env.BS_Location, user, env.state, env.point, file, env.F_packet) # DUA-LFU
             elif algorithm == 2: # using main_DQN
                 s = torch.from_numpy(state).float().unsqueeze(0)
                 with torch.no_grad():
