@@ -66,11 +66,12 @@ def Train(Q, Q_target, memory, optimizer): # training function motive by seungeu
         optimizer.step()
 
 def main():
-    
     if type_DNN == 0:
-        main_DQN = DNN_model.Qnet_FCN(input_size, node, output_size).to(device) #FCN
+        main_DQN = DNN_model.Qnet_FCN(input_size, node, output_size).to(device)  # FCN
+        target_DQN = DNN_model.Qnet_FCN(input_size, node, output_size).to(device).to(device)
     elif type_DNN == 1:
-        main_DQN = DNN_model.Qnet_v6(env.Num_packet, env.Num_file, env.F_packet, node, output_size).to(device) #CNN
+        main_DQN = DNN_model.Qnet_v6(env.Num_packet, env.Num_file, env.F_packet, node, output_size).to(device)  # CNN
+        target_DQN = DNN_model.Qnet_v6(env.Num_packet, env.Num_file, env.F_packet, node, output_size).to(device)
         
     if Model_path != "":
         main_DQN.load_state_dict(torch.load(Model_path, map_location='cpu'))
