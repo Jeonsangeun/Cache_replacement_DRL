@@ -44,11 +44,8 @@ batch_size = 4096
 max_episode = 10000
 
 # -----load network parameters-----
-type_DNN = 0 # 0 : FCN DQN, 1 : Propose DQN
-Model_path = "CNN_c200_40000.pth" # file name
-
-# -----select algorithm-----
-algorithm = 0 # 0 : DUA-LFU, 1 : CUA-LFU, 2 : DQN-FCN & Proposed scheme
+type_DNN = 0               # 0 : FCN DQN, 1 : Propose DQN
+Model_path = "" # file name
 
 def Train(Q, Q_target, memory, optimizer): # training function motive by seungeunrho
     for i in range(30):
@@ -59,14 +56,7 @@ def Train(Q, Q_target, memory, optimizer): # training function motive by seungeu
         reward = reward.cuda(device)
         next_state = next_state.cuda(device)
         done = done.cuda(device)
-
-        # DDQN
-        # Q_out = Q(state)
-        # Q_value = Q_out.gather(1, action)
-        # Q_argmax_value = Q_out.max(1)[1].unsqueeze(1)
-        # Q_prime = Q_target(next_state)
-        # Q_prime = Q_prime.gather(1, Q_argmax_value)
-
+        
         # DQN
         Q_out = Q(state)
         Q_value = Q_out.gather(1, action)
@@ -80,27 +70,28 @@ def Train(Q, Q_target, memory, optimizer): # training function motive by seungeu
         optimizer.step()
 
 def main():
-    # DQN_FCN model
-    # main_DQN = DNN_model.Qnet_FCN(input_size, node, output_size).to(device) #FCN DQN
-    # target_DQN = DNN_model.Qnet_FCN(input_size, node, output_size).to(device) #FCN DQN
-
-    # Proposed model
-    main_DQN = DNN_model.Qnet_v6(env.Num_packet, env.Num_file, env.F_packet, node, output_size).to(device)
-    target_DQN = DNN_model.Qnet_v6(env.Num_packet, env.Num_file, env.F_packet, node, output_size).to(device)
+    
+    if type_DNN == 0:
+        main_DQN = DNN_model.Qnet_FCN(input_size, node, output_size).to(device) #FCN
+    elif type_DNN == 1:
+        main_DQN = DNN_model.Qnet_v6(env.Num_packet, env.Num_file, env.F_packet, node, output_size).to(device) #CNN
+        
+    if Model_path != "":
+        main_DQN.load_state_dict(torch.load(Model_path, map_location='cpu'))
+        main_DQN.eval()
 
     target_DQN.load_state_dict(main_DQN.state_dict())
     target_DQN.eval()
 
     memory = DNN_model.ReplayBuffer()
-    env.Zip_funtion()
-    # learning set & 1 episode
-    interval = 10
-    request = 1000
+    
+    env.Zip_funtion() # init popularity
+    request = 1000 # the number of requests
+    interval = 10 # output check cycle
+    cost, hit_rate, tr_epoch = 0.0, 0.0 # init cost
+    
     # optimize tool
     optimizer = optim.Adam(main_DQN.parameters(), lr=learning_rate)
-    # print set
-    cost, hit_rate = 0.0, 0.0
-    pro = 0
 
     for episode in range(max_episode):
 
@@ -117,7 +108,7 @@ def main():
                 Noise = np.random.normal(0, sigma, size=4 * env.F_packet) / 10
                 action = env.action_select(aa, Noise)
 
-            # print action value
+            # Validation_Q-value
             if episode % 100 == 99:
                 if i == 0:
                     print(np.max(aa))
@@ -126,7 +117,7 @@ def main():
             next_state, reward, done, file, user = env.step(action, file, user)
             done_mask = 0.0 if done else 1.0
 
-            #
+            # Avoid overestimate
             if reward <= -500:
                 reward = -500
 
@@ -149,7 +140,7 @@ def main():
 
         if episode % 2500 == 0 and episode != 0: # Saving learned NNs every 2500 (check-point)
             pro += 1
-            savePath = "test_model_conv0" + str(pro) + ".pth"
+            savePath = "test_model_conv" + str(tr_epoch) + ".pth"
             torch.save(main_DQN.state_dict(), savePath)
             np.save("acc_delay", latency_layer)
             np.save("cache_hit", cache_layer)
