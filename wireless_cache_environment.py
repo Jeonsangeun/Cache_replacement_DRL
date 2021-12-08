@@ -155,12 +155,6 @@ class cache_replacement:
         result = np.vstack([result, p])
         return result
 
-    def print(self):
-        print(np.where(self.state[0] == self.point)[0])
-        print(np.where(self.state[1] == self.point)[0])
-        print(np.where(self.state[2] == self.point)[0])
-        print(np.where(self.state[3] == self.point)[0])
-
     def memory_state(self):
         state = np.array([np.where(self.state[0] == self.point)[0], np.where(self.state[1] == self.point)[0],
                           np.where(self.state[2] == self.point)[0], np.where(self.state[3] == self.point)[0]])
