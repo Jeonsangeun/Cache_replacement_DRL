@@ -53,12 +53,6 @@ env = cache.cache_replacement(coverage, Zipf_ex, Mem)
 ```
 Modify the following code in wireless_cache_network.py. After changing, run main_testing.py.
 
-* Memory (cache capacity)
-```c
-# -----main setting-----
-Mem = 16 # cache memory capacity range : [4, 24]
-env = cache.cache_replacement(coverage, Zipf_ex, Mem)
-```
 
 ## Non-stationary learning 
 This is a learning and testing code in a non-stationary environment where the user's popularity in the network changes over time. The popularity change depends on the pop variable in the code. When the change_pop() function occurs during an episode, the request rank of each content rises by the amount of pop. At this time, in the case of content that has no higher rank, it is lowered to the lowest rank.
