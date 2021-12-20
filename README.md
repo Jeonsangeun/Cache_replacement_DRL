@@ -32,7 +32,6 @@ This is the code that designed the neural network structure. As shown in the pap
 This can confirm the performance results for the latency according to user association and cache replacement of the Deep reinforcement learning-based algorithm. The performance test can be performed in the following steps. 
 
 First, set the environment's coverage, popularity (Zipf index), and cache memory size.
-* Parameter set (x_max, y_max), (Zipf's exponent), (cache capacity)
 ```c
 # -----main setting-----
 coverage = 200 # Network coverage, range : [150, 300]
@@ -41,7 +40,6 @@ Mem = 16 # cache memory capacity range : [4, 24]
 env = cache.cache_replacement(coverage, Zipf_ex, Mem)
 ```
 And, Select the type of deep neural network. The general FCN-DQN and the proposed design scheme can be selected.
-* Content Popularity (Zipf's exponent)
 ```c
 # -----load network parameters-----
 type_DNN = 0 # 0 : FCN DQN, 1 : Propose DQN
