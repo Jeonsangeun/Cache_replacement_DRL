@@ -28,7 +28,7 @@ You can check the algorithm in Training.py.
 ## DNN_model
 This is the code that designed the neural network structure. As shown in the paper, the DNN structure to be trained can be found in DNN_model.py. I went through a lot of trial and error to find the current effective DNN, and you can check the old DNN structure in the last_DNN_model folder.
 
-## Performance test/DQN_test
+## Performance test/DQN_test.py
 This can confirm the performance results for the latency according to user association and cache replacement of the Deep reinforcement learning-based algorithm. The performance test can be performed in the following steps. 
 
 First, set the environment's coverage, popularity (Zipf index), and cache memory size.
@@ -55,8 +55,9 @@ algorithm = 0 # 0 : DUA-LFU, 1 : CUA-LFU, 2 : DQN-FCN & Proposed scheme
 ```
 Since the model of each environment has been trained, you can use the deep neural network model (.pth) in the folder of each environment.
 
-## Non-stationary learning 
-This is a learning and testing code in a non-stationary environment where the user's popularity in the network changes over time. The popularity change depends on the pop variable in the code. When the change_pop() function occurs during an episode, the request rank of each content rises by the amount of pop. At this time, in the case of content that has no higher rank, it is lowered to the lowest rank.
+## Non-stationary learning/DQN_change_learning.py
+This is a learning and testing code in a non-stationary environment where the user's popularity in the network changes over time. 
+
 ```c
 pop = 5
 env = cache.cache_replacement(pop)
