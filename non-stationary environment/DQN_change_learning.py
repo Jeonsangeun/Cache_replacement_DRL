@@ -29,6 +29,7 @@ cache_layer = [] # cache hit rate stack
 # -----non-stationary environment-----
 non_factor = 5 # a certain number of content popularity changes : [1, 19]
 env = cache.cache_replacement(coverage, Zipf_ex, Mem, non_factor)
+episode_interval = 500 # Popularity changes every 500 times
 
 # -----training parameter-----
 node = 400
@@ -94,7 +95,7 @@ def main():
 
     for episode in range(max_episode):
 
-        if episode % 500 == 0 and episode != 0: # Popularity changes every 500 times
+        if episode % episode_interval == 0 and episode != 0: # Popularity changes every 500 times
             env.change_pop()
 
         state = env.reset()
