@@ -20,7 +20,7 @@ What to pay attention to
 ```c
 'DNN_model.py' : The neural network model code
 'DQN_ _train.py' : The training main code
-'wireless_cache__environment.py' : The network environment code
+'wireless_cache_ _environment.py' : The network environment code
 'conventional_method.py' : Comparison algorithms code such as LFU
 ```
 The above 4 codes must exist in the same directory where I saved them for the code to work properly.
