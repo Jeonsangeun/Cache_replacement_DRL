@@ -26,7 +26,7 @@ We adopted DQN as our learning algorithm, and the learning process is illustrate
 You can check the algorithm in Training.py.
 
 ## DNN_model
-This is the code that designed the neural network structure. As shown in the paper, the DNN structure to be trained can be found in DNN_model.py. I went through a lot of trial and error to find the current effective DNN, and you can check the old DNN structure in the last_DNN_model folder.
+This is the code that designed the neural network structure. As shown in the paper, the DNN structure to be trained can be found in 'DNN_model.py'. For the completed neural network model '.pth', check the learning results for each environment in the performance test folder.
 
 ## Performance test/DQN_test.py
 This can confirm the performance results for the latency according to user association and cache replacement of the Deep reinforcement learning-based algorithm. The performance test can be performed in the following steps. 
