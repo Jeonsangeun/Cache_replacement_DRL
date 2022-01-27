@@ -22,11 +22,13 @@ max_episode = 10
 coverage = 200 # Network coverage, range : [150, 300]
 Zipf_ex = 0.8 # popularity exponential, range : [0.3, 2.0]
 Mem = 16 # cache memory capacity range : [4, 24]
-non_factor = 5 # a certain number of content popularity changes : [1, 19]
-env = cache.cache_replacement(coverage, Zipf_ex, Mem, non_factor)
 conventional = LFU()
 latency_layer = [] # latency stack
 cache_layer = [] # cache hit rate stack
+
+# -----non-stationary environment-----
+non_factor = 5 # a certain number of content popularity changes : [1, 19]
+env = cache.cache_replacement(coverage, Zipf_ex, Mem, non_factor)
 
 # -----training parameter-----
 node = 400
