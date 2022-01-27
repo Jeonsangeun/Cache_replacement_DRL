@@ -17,11 +17,13 @@ import collections
 For training, the library was used Pytorch and used the version pytorch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0 cudatoolkit=10.2. The project consists of Training.py, a learning and scenario progress code, Cache_Net_Environment.py, a network environment code, and a DNN_model.py, designed deep neural network (DNN) model. In addition, as described in the paper, test codes that can perform performance verification while changing various network environment variables were also prepared. I wanted to use an application that implements a wireless environment, but it was too complicated to configure a cache network, so I coded it myself and proceeded with the simulation.
 
 What to pay attention to
-The neural network model is 'DNN_model.py'
-The training main code is 'DQN_ _train.py'
-The network environment code is 'wireless_cache__environment.py'
-Comparison algorithms such as LFU are 'conventional_method.py'
-The above 4 codes must exist in the same directory for the code to work properly.
+```c
+'DNN_model.py' : The neural network model code
+'DQN_ _train.py' : The training main code
+'wireless_cache__environment.py' : The network environment code
+'conventional_method.py' : Comparison algorithms code such as LFU
+```
+The above 4 codes must exist in the same directory where I saved them for the code to work properly.
 
 ### System model
 <p align="center"><img src="./figure/System_model.png" width="40%" height="40%"/></p>
