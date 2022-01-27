@@ -55,14 +55,14 @@ algorithm = 0 # 0 : DUA-LFU, 1 : CUA-LFU, 2 : DQN-FCN & Proposed scheme
 ```
 Since the model of each environment has been trained, you can use the deep neural network model (.pth) in the folder of each environment.
 
-## Non-stationary learning/DQN_change_learning.py
-This is a learning and testing code in a non-stationary environment where the user's popularity in the network changes over time. 
+## non-stationary environment
+In the non-stationary environment directory, the training code and test code in the non-stationary environment are located.
+A non-stationary environment environment is an environment in which the popularity of content changes with each episode. The popularity changes in a FIFO manner, and the extent of change is determined by the 'non_factor' variable of the main function.
 
 ```c
-pop = 5
-env = cache.cache_replacement(pop)
-...
-if episode % 500 == 0 and episode != 0:
-    env.change_pop()
+# -----non-stationary environment-----
+non_factor = 5 # a certain number of content popularity changes : [1, 19]
+env = cache.cache_replacement(coverage, Zipf_ex, Mem, non_factor)
+episode_interval = 500 # Popularity changes every 500 times
 ```
-Each variable can be modified in the following part of the main code.
+The following parameters have been added to the basic code, and the episode process is the same.
