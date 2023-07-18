@@ -42,8 +42,10 @@ class Qnet_FCN(nn.Module):
         self.output_size = output_size
 
         fc1 = nn.Linear(self.input_size, self.node)
-        fc2 = nn.Linear(self.node, self.output_size)
-        fc3 = nn.Linear(self.output_size, self.output_size)
+        fc2 = nn.Linear(self.node, self.node)
+        fc3 = nn.Linear(self.node, self.node)
+        fc4 = nn.Linear(self.node, self.output_size)
+        fc5 = nn.Linear(self.output_size, self.output_size)
 
         nn.init.xavier_uniform_(fc1.weight.data)
         fc1.bias.data.fill_(0)
@@ -51,8 +53,12 @@ class Qnet_FCN(nn.Module):
         fc2.bias.data.fill_(0)
         nn.init.xavier_uniform_(fc3.weight.data)
         fc3.bias.data.fill_(0)
+        nn.init.xavier_uniform_(fc4.weight.data)
+        fc4.bias.data.fill_(0)
+        nn.init.xavier_uniform_(fc5.weight.data)
+        fc5.bias.data.fill_(0)
 
-        self.fc = nn.Sequential(fc1, nn.ReLU(), fc2, nn.ReLU(), fc3).to(device)
+        self.fc = nn.Sequential(fc1, nn.ReLU(), fc2, nn.ReLU(), fc3, nn.ReLU(), fc4, nn.ReLU(), fc5).to(device)
 
     def forward(self, x):
         x = x.to(device)
@@ -93,8 +99,7 @@ class Qnet_v6(nn.Module):
         # pool2 = nn.MaxPool1d(1)
 
         self.conv_module = nn.Sequential(conv1, nn.ReLU(), conv2, nn.ReLU()).to(device)
-        self.relu = nn.LeakyReLU(inplace=True).to(device)
-        self.relu_ = nn.LeakyReLU(inplace=False).to(device) # Memory optimize
+        self.relu = nn.LeakyReLU(inplace=False).to(device)
 
         self.Lc_error = nn.Linear(1, 1, bias=False).to(device)
         self.Lc_request = nn.Linear(1, 1, bias=False).to(device)
@@ -102,9 +107,7 @@ class Qnet_v6(nn.Module):
         fc1 = nn.Linear(self.node, self.node)
         fc2 = nn.Linear(self.node, self.output_size)
         fc3 = nn.Linear(self.output_size, self.output_size)
-        self.fully_module1 = nn.Sequential(fc1, self.relu, fc2, self.relu, fc3).to(device)
-
-        self.fully_module2 = nn.Sequential(fc1, self.relu_, fc2, self.relu_, fc3).to(device)
+        self.fully_module = nn.Sequential(fc1, self.relu, fc2, self.relu, fc3).to(device)
 
         nn.init.xavier_uniform_(fc1.weight.data)
         fc1.bias.data.fill_(0)
@@ -131,7 +134,7 @@ class Qnet_v6(nn.Module):
         p_s = self.conv_module(sbs_s)
 
         out = p_s.reshape(-1, self.node)
-        out = self.fully_module1(out)
+        out = self.fully_module(out)
 
         return out
 
@@ -151,6 +154,6 @@ def Predict_Qnet_v6(model, x):
     p_s = model.conv_module(sbs_s)  # 4 x 5 * contents
 
     out = p_s.reshape(-1, 400)
-    out = model.fully_module2(out)
+    out = model.fully_module(out)
 
     return out
