@@ -11,7 +11,7 @@ class cache_replacement:
         self.y_max = coverage
         self.F_packet = self.Num_file * self.Num_packet # Total number of chunks
         self.alpha = Zipf_ex # Popularity
-        self.BH_path = 3.6 # Backhaul pathloss
+        self.FH_path = 4.5 # Backhaul pathloss
         self.AC_path = 3.6 # Access pathloss
         self.Transmission_Power = 10**9
         self.user_location = np.zeros([2]) # user location
@@ -21,10 +21,10 @@ class cache_replacement:
                                     [(-1 * self.x_max / 2.0), (-1 * self.y_max / 2.0)],
                                     [(self.x_max / 2.0), (-1 * self.y_max / 2.0)]]) # SBS location
         self.state = np.zeros([self.Small_cell, self.F_packet]) # input_data
-        self.Transmit_Rate = 1.0
+        self.FH_Transmit_Rate, self.AC_Transmit_Rate = 0.1, 1.0
         self.M_S_error = 0.1 # Macro->Small init error
-        self.Macro_BS = 10 # Macro-> Small latency
-        self.Small_BS = 5 # Small-> User latency
+        self.Macro_BS = 4 #Macro->Small cost
+        self.Small_BS = 1 #Small->Macro cost
         self.cost, self.fail, self.count = 0, 0, 0
         self.point = 1 # state point
         self.Zip_law = [] # zip probability
@@ -57,7 +57,7 @@ class cache_replacement:
             self.state[i][self.BS[i]] = self.point
 
         d = self.Distance(self.BS_Location[0], [0, 0])
-        self.MS_error = self.Probabilistic_BH(d)
+        self.MS_error = self.Probabilistic_FH(d)
 
         self.user_location = np.random.uniform(-1*self.x_max, self.x_max, (1, 2))[0]
         self.cost, self.fail, self.count, self.hit = 0, 0, 0, 0
@@ -86,12 +86,12 @@ class cache_replacement:
     def Distance(self, x, y): # Distance
         return np.sqrt(np.sum((x - y)**2))
 
-    def Probabilistic_BH(self, d):
-        prob = 1.0 - np.exp(-1 * ((2**self.Transmit_Rate - 1)*d**self.BH_path) / self.Transmission_Power)
+    def Probabilistic_FH(self, d):
+        prob = 1.0 - np.exp(-1 * ((2**self.FH_Transmit_Rate - 1)*d**self.FH_path) / self.Transmission_Power)
         return prob
 
     def Probabilistic_AC(self, d):
-        prob = 1.0 - np.exp(-1 * ((2**self.Transmit_Rate - 1)*d**self.AC_path) / self.Transmission_Power)
+        prob = 1.0 - np.exp(-1 * ((2**self.AC_Transmit_Rate - 1)*d**self.AC_path) / self.Transmission_Power)
         return prob
 
     def random_action(self):
@@ -117,9 +117,11 @@ class cache_replacement:
             self.count += 1
         else:
             self.cache_miss(ap_index, file_refresh, file)
-            m = np.random.geometric(p=(1 - self.M_S_error))
-            cost += m * self.Macro_BS
-            reward -= m * self.Macro_BS
+            cost += self.Macro_BS
+            reward -= self.Macro_BS
+            m = np.random.geometric(p=(1 - self.MS_error))
+            cost += m * self.Small_BS
+            reward -= m * self.Small_BS
 
             n = np.random.geometric(p=(1 - self.Probabilistic_AC(d)))
             time = self.TTL(n)
