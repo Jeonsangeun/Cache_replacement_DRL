@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.stats import norm
 
 class cache_replacement:
 
@@ -22,7 +23,6 @@ class cache_replacement:
                                     [(self.x_max / 2.0), (-1 * self.y_max / 2.0)]])
         self.state = np.zeros([self.Small_cell, self.F_packet])
         self.FH_Transmit_Rate, self.AC_Transmit_Rate = 0.1, 1.0
-        self.M_S_error = 0.1 # Macro->Small
         self.M_S_distance = np.sqrt(np.sum((self.BS_Location[0] - [0, 0]) ** 2))
         self.Macro_BS = 4 #Macro->Small cost
         self.Small_BS = 1 #Small->Macro cost
@@ -144,15 +144,13 @@ class cache_replacement:
         return np.argmax(table[0])
 
     def flat(self, user, file):
-        d = np.zeros([self.Small_cell])
         z = np.zeros([self.F_packet])
         p = np.zeros([self.F_packet])
         z[file] = self.point
         temp = self.state * 1
         result = np.reshape(temp, [self.Small_cell, self.F_packet])
         for i in range(self.Small_cell):
-            d[i] = np.array(self.Distance(self.BS_Location[i], user))
-            p[i] = (1 - self.Probabilistic_AC(d[i]))
+            p[i] = (1 - self.Probabilistic_AC(np.array(self.Distance(self.BS_Location[i], user))))
         result = np.vstack([result, z])
         result = np.vstack([result, p])
         return result
@@ -161,3 +159,18 @@ class cache_replacement:
         state = np.array([np.where(self.state[0] == self.point)[0], np.where(self.state[1] == self.point)[0],
                           np.where(self.state[2] == self.point)[0], np.where(self.state[3] == self.point)[0]])
         return state
+        
+ # For DDPG
+    # def continuous_to_discrete(self, x):
+    #     y = np.floor(x)
+    #     return y.astype(int)
+
+    def gaussian_pdf(self, mean, x_values):
+        pdf_values = norm.pdf(np.arange(x_values), loc=mean, scale=1)
+        Discrete = np.array(pdf_values) 
+        # for i in range(self.Small_cell):
+        #     if i == x:
+        #         Discrete = np.append(Discrete, pdf_values)
+        #     else:
+        #         Discrete = np.append(Discrete, np.zeros(self.F_packet))
+        return Discrete
