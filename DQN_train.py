@@ -47,18 +47,27 @@ def Train(Q, Q_target, memory, optimizer): # training function motive by seungeu
     for i in range(30):
         state, action, reward, next_state, done = memory.sample(batch_size)
 
-        state = state.cuda(device)
-        action = action.cuda(device)
-        reward = reward.cuda(device)
-        next_state = next_state.cuda(device)
-        done = done.cuda(device)
-        
-        # DQN
+        state = state.to(device)
+        action = action.to(device)
+        reward = reward.to(device)
+        next_state = next_state.to(device)
+        done = done.to(device)
+
+        # DDQN
+        # Q_outs = Q(state)
+        # Next_Q_values = Q(next_state)
+        # Next_Q_state_values = Q_target(next_state)
+
+        # Q_value = Q_outs.gather(1, action)
+        # Next_Q_value = Next_Q_state_values.gather(1, torch.max(Next_Q_values, 1)[1].unsqueeze(1))
+        # target = reward + gamma * Next_Q_value * done
+
+        # # DQN
         Q_out = Q(state)
         Q_value = Q_out.gather(1, action)
         Q_prime = Q_target(next_state).max(1)[0].unsqueeze(1)
-
         target = reward + gamma * Q_prime * done
+
         loss = F.smooth_l1_loss(Q_value, target)
 
         optimizer.zero_grad()
